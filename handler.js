@@ -162,8 +162,8 @@ module.exports = {
       let participants = m.isGroup ? groupMetadata.participants : [] || []
       let user = m.isGroup ? participants.find(u => u.jid == m.sender) : {} // User Data
       let bot = m.isGroup ? participants.find(u => u.jid == this.user.jid) : {} // Data Kamu (bot)
-      let isAdmin = user.isAdmin || user.isSuperAdmin || true // Apakah user admin?
-      let isBotAdmin = bot.isAdmin || bot.isSuperAdmin || false // Apakah kamu (bot) admin?
+      let isAdmin = user?.isAdmin || user?.isSuperAdmin || false // Apakah user admin?
+      let isBotAdmin = bot?.isAdmin || bot?.isSuperAdmin || false // Apakah kamu (bot) admin?
       let isBlocked = this.blocklist.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').filter(v => v != this.user.jid).includes(m.sender) // Apakah user diblokir?
       for (let name in global.plugins) {
         let plugin = global.plugins[name]
@@ -436,7 +436,6 @@ module.exports = {
     if (chat.delete) return
     await this.sendButton(m.key.remoteJid, `
 Terdeteksi @${m.participant.split`@`[0]} telah menghapus pesan
-
 ketik *.on delete* untuk mematikan pesan ini
 `.trim(), '', 'Matikan Antidelete', ',on delete', m.message, {
       contextInfo: {
@@ -469,9 +468,7 @@ ketik *.on delete* untuk mematikan pesan ini
     if (!desc) return
     let caption = `
     @${descOwner.split`@`[0]} telah mengubah deskripsi grup.
-
     ${desc}
-
     ketik *.off desc* untuk mematikan pesan ini
         `.trim()
     this.sendButton(jid, caption, '', 'Matikan Deskripsi', ',off desc', { contextInfo: { mentionedJid: this.parseMention(caption) } })
